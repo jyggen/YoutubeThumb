@@ -4,11 +4,9 @@ require 'youtube_thumbnail.php';
 
 // Set up a basic config.
 $config = array(
-	'output' => array(
-		'format' => 'png',    // which format save() should use.
-		'path'   => 'public/' // Where save() should put the image.
-	),
-	//'format' => 'hqdefault' // Which thumbnail to fetch. Default is "best available", so let's use that.
+	'output_format' => 'png',    // which format save() should use.
+	'output_path'   => 'images/' // Where save() should put the image.
+	//'input_format' => 'hqdefault' // Which thumbnail to fetch. Default is "best available", so let's use that.
 );
 
 // Init a new Youtube_Thumbnail object.
@@ -16,12 +14,12 @@ $thumb = new Youtube_Thumbnail('gzDS-Kfd5XQ', $config);
 
 /**
  * Quick and easy method fetch and save the image to disk.
- * $proxy->fetch()->save();
+ * $proxy->load()->save();
  * We want this image in grayscale though, let's do that instead!
  */
 
 // Fetch the image.
-$thumb->fetch();
+$thumb->load();
 
 // Get the image data.
 $image = imagecreatefromstring($thumb->getImgData());
