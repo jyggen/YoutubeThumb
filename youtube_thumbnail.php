@@ -3,7 +3,7 @@ class Youtube_Thumbnail
 {
 
 	protected $data, $id;
-	protected $config = array();
+	protected $config = array('output_format' => 'png', 'output_path' => './images/', 'input_format' => null);
 
 	public function __construct($id, array $config=array()) {
 
@@ -18,19 +18,73 @@ class Youtube_Thumbnail
 
 	public function load() {
 
-		$method = $this->getConfig('request_method');
+		$request = $this->request('http://gdata.youtube.com/feeds/api/videos/'.$this->id.'?v=2&alt=json');
 
-		if($method == 'curl') {
-			$this->loadCurl();
-		} elseif($method == 'file_get_contents') {
-			$this->loadFileGetContents();
-		} else {
-			throw new Exception('Invalid Request Method!');
+		if($request['info']['http_code'] == 404) {
+			throw new Exception('Clip '.$this->id.' doesn\'t exist!');
 		}
+
+		$data   = json_decode($request['data'], true);
+		$thumbs = array();
+		$image  = null;
+		$format = $this->getConfig('input_format');
+
+		foreach($data['entry']['media$group']['media$thumbnail'] as $img) {
+
+			$thumbs[$img['yt$name']] = array(
+				'url'    => $img['url'],
+				'height' => $img['height'],
+				'width'  => $img['width'],
+				'size'   => $img['height']*$img['width'],
+			);
+
+		}
+
+		if($thumbs != null && array_key_exists($format, $thumbs)) {
+
+			$image = $tumbs[$format]['url'];
+
+		} else {
+
+			usort($thumbs, array($this, 'cmp_by_size'));
+
+			$key   = count($thumbs)-1;
+			$image = $thumbs[$key]['url'];
+
+		}
+
+		$request    = $this->request($image);
+		$this->data = imagecreatefromstring($request['data']);
+
+		return $this;
 
 	}
 
 	public function save() {
+
+		$path = $this->getConfig('output_path');
+		$ext  = $this->getConfig('output_format');
+		$name = $path.bin2hex($this->id).'.'.$ext;
+
+		switch($ext) {
+			case 'bmp':
+				$func = 'imagebmp';
+				break;
+			case 'gif':
+				$func = 'imagegif';
+				break;
+			case 'jpg':
+			case 'jpeg':
+				$func = 'imagejpeg';
+				break;
+			case 'png':
+				$func = 'imagepng';
+				break;
+		}
+
+		$func($this->data, $name);
+
+		return $this;
 
 	}
 
@@ -48,7 +102,7 @@ class Youtube_Thumbnail
 
 	protected function getConfig($item) {
 
-		if (isset($this->config[$item])) {
+		if (array_key_exists($item, $this->config)) {
 			return $this->config[$item];
 		} else {
 			throw new Exception('Couldn\'t find "'.$item.'" in configuration!');
@@ -56,6 +110,26 @@ class Youtube_Thumbnail
 
 	}
 
-}
+	protected function request($url) {
 
-#http://gdata.youtube.com/feeds/api/videos/gzDS-Kfd5XQ?v=2&prettyprint=true&alt=json
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$data = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+
+		return array(
+			    'data' => $data,
+			    'info' => $info,
+			   );
+
+	}
+
+	protected function cmp_by_size($a, $b) {
+
+		return $a['size'] - $b['size'];
+
+	}
+
+}
