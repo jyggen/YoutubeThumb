@@ -1,13 +1,17 @@
 {
     "name": "jyggen/youtubethumb",
+    "type": "library",
     "description": "A PHP class created to help you load, edit and save thumbnails from videos on Youtube.",
+    "keywords": ["Youtube", "Image", "Thumbnail"],
+    "homepage": "https://github.com/jyggen/YoutubeThumb",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jonas Stendahl",
             "email": "jonas.stendahl@gmail.com"
         }
     ],
-    "require": {
-
-    }
+     "autoload": {
+        "psr-0": { "jyggen\\YoutubeThumb": "classes/" }
+    },
 }
