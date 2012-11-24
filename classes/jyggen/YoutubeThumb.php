@@ -91,21 +91,19 @@ class YoutubeThumb
 
         switch($ext) {
             case 'bmp':
-                $func = 'imagebmp';
+                imagebmp($this->data, $name);
                 break;
             case 'gif':
-                $func = 'imagegif';
+                imagegif($this->data, $name);
                 break;
             case 'jpg':
             case 'jpeg':
-                $func = 'imagejpeg';
+                imagejpeg($this->data, $name);
                 break;
             case 'png':
-                $func = 'imagepng';
+                imagepng($this->data, $name);
                 break;
         }
-
-        $func($this->data, $name);
 
         return $this;
 
@@ -140,10 +138,13 @@ class YoutubeThumb
     {
 
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
         $data = curl_exec($ch);
         $info = curl_getinfo($ch);
+
         curl_close($ch);
 
         return array(
