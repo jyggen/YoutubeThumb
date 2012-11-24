@@ -1,0 +1,13 @@
+{
+    "name": "jyggen/youtubethumb",
+    "description": "A PHP class created to help you load, edit and save thumbnails from videos on Youtube.",
+    "authors": [
+        {
+            "name": "Jonas Stendahl",
+            "email": "jonas.stendahl@gmail.com"
+        }
+    ],
+    "require": {
+
+    }
+}
