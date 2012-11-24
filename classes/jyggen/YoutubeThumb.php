@@ -66,7 +66,9 @@ class YoutubeThumb
 
         } else {
 
-            usort($thumbs, array($this, 'cmpBySize'));
+            usort($thumbs, function($a, $b){
+                return $a['size'] - $b['size'];
+            });
 
             $key   = count($thumbs)-1;
             $image = $thumbs[$key]['url'];
@@ -148,13 +150,6 @@ class YoutubeThumb
                 'data' => $data,
                 'info' => $info,
                );
-
-    }
-
-    protected function cmpBySize($a, $b)
-    {
-
-        return $a['size'] - $b['size'];
 
     }
 
