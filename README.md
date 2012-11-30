@@ -1,4 +1,4 @@
-# YoutubeThumb
+# YoutubeThumb [![Build Status](https://secure.travis-ci.org/jyggen/YoutubeThumb.png?branch=master)](https://travis-ci.org/jyggen/YoutubeThumb)
 
 A PHP class created to help you load, edit and save thumbnails from videos on Youtube.
 
