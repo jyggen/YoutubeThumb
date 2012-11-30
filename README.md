@@ -32,3 +32,26 @@ $thumb->reset();
 $thumb->setName('my_awesome_thumbnail');
 $thumb->save('my_path/', 'gif');
 ```
+## Thumbnail object
+
+### Static Methods
+
+* __forge(string $youtubeId)__  
+Forge a new Thumbnail instance.
+* __instance(string $youtubeId)__  
+Retrieve an existing Thumbnail instance.
+
+### Methods
+
+* __reset()__  
+Reset the thumbnail to its original state.
+* __save(string $path, string $extension = 'png')__  
+Save the thumbnail to disk.
+* __getData()__  
+Get the thumbnail's GD resource.
+* __setData(resource $data)__  
+Set the thumbnail's GD resource.
+* __getName()__  
+Get the output name without extension.
+* __setName(string $name)__  
+Set the output name without extension.
