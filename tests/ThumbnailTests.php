@@ -19,6 +19,12 @@ class ThumbnailTests extends \PHPUnit_Framework_TestCase
     {
 
         $this->assertInstanceof('jyggen\\Youtube\\Thumbnail', Thumbnail::forge('K7IwAErGJQ8'));
+
+    }
+
+    public function testForgeException()
+    {
+
         $this->setExpectedException('jyggen\\Youtube\\Exception\\DuplicateInstanceException', 'You can not instantiate');
         Thumbnail::forge('K7IwAErGJQ8');
 
@@ -82,6 +88,26 @@ class ThumbnailTests extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testSetDataNotResource()
+    {
+
+        $thumb = Thumbnail::instance('K7IwAErGJQ8');
+        $this->setExpectedException('jyggen\\Youtube\\Exception\\InvalidTypeException', 'must be resource');
+        $thumb->setData(true);
+
+    }
+
+    public function testSetDataNotGD()
+    {
+
+        $thumb = Thumbnail::instance('K7IwAErGJQ8');
+        $curl  = curl_init();
+
+        $this->setExpectedException('jyggen\\Youtube\\Exception\\InvalidTypeException', 'GD resource');
+        $thumb->setData($curl);
+
+    }
+
     public function testSetDataByReference()
     {
 
@@ -120,6 +146,15 @@ class ThumbnailTests extends \PHPUnit_Framework_TestCase
 
         $thumb->setName($name);
         $this->assertEquals($name, $thumb->getName());
+
+    }
+
+    public function testSetNameNotString()
+    {
+
+        $thumb = Thumbnail::instance('K7IwAErGJQ8');
+        $this->setExpectedException('jyggen\\Youtube\\Exception\\InvalidTypeException', 'must be string');
+        $thumb->setName(true);
 
     }
 

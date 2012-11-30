@@ -102,6 +102,14 @@ class Thumbnail
     public function setData($data)
     {
 
+        if(!is_resource($data)) {
+            throw new Exception\InvalidTypeException('Type of Data must be resource, '.gettype($data).' given.'); 
+        }
+
+        if(get_resource_type($data) !== 'gd') {
+            throw new Exception\InvalidTypeException('Data must be a valid GD resource, '.get_resource_type($data).' given.');
+        }
+
         $this->data = $data;
 
     }
@@ -115,6 +123,10 @@ class Thumbnail
 
     public function setName($name)
     {
+
+        if(!is_string($name)) {
+            throw new Exception\InvalidTypeException('Type of Name must be string, '.gettype($name).' given.'); 
+        }
 
         $this->name = $name;
 
