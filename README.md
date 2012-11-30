@@ -1,4 +1,4 @@
-# YoutubeThumb
+# YoutubeThumb [![Build Status](https://secure.travis-ci.org/jyggen/YoutubeThumb.png?branch=master)](https://travis-ci.org/jyggen/YoutubeThumb)
 
 A PHP class created to help you load, edit and save thumbnails from videos on Youtube.
 
@@ -7,13 +7,51 @@ A PHP class created to help you load, edit and save thumbnails from videos on Yo
 ## Examples
 
 ```php
-use jyggen\YoutubeThumb as Thumb;
+use jyggen\Youtube\Thumbnail;
 
-$config = array(
-  'output_format'  => 'png',      // which output format to use.
-  'output_path'    => 'images/',  // where to output the images.
-  'input_format'   => 'hqdefault' // which thumbnail to fetch, defaults to null (aka. "best available").
-);
+// Load a thumbnail and save it to disk.
+Thumbnail::forge('83fJ7hlZkpA')->save('my_path/');
 
-// Create a new object passing the Youtube ID and the config.
-$thumb = new Thumb('83fJ7hlZkpA', $config);
+// Maybe we wanna do some changes aswell. Retrieve the previously forged instance.
+$thumb = Thumbnail::instance('83fJ7hlZkpA');
+
+// Get the Thumbnail's GD resource.
+$data  = $thumb->getData();
+
+// Create a new GD resource and copy a portion of the thumbnail into our new image.
+$dest = imagecreatetruecolor(80, 40);
+imagecopy($dest, $data, 0, 0, 20, 13, 80, 40);
+
+// Set our old thumbnail to the new resized one.
+$thumb->setData($dest);
+
+// Oh shit, did we fudge up something? Reset the image to its original state.
+$thumb->reset();
+
+// We want to save the image again, but with a different name and extension.
+$thumb->setName('my_awesome_thumbnail');
+$thumb->save('my_path/', 'gif');
+```
+## Thumbnail object
+
+### Static Methods
+
+* __forge(string $youtubeId)__  
+Forge a new Thumbnail instance.
+* __instance(string $youtubeId)__  
+Retrieve an existing Thumbnail instance.
+
+### Methods
+
+* __reset()__  
+Reset the thumbnail to its original state.
+* __save(string $path, string $extension = 'png')__  
+Save the thumbnail to disk.
+* __getData()__  
+Get the thumbnail's GD resource.
+* __setData(resource $data)__  
+Set the thumbnail's GD resource.
+* __getName()__  
+Get the output name without extension.
+* __setName(string $name)__  
+Set the output name without extension.
