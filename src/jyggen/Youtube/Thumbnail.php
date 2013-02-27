@@ -103,7 +103,7 @@ class Thumbnail
     {
 
         if(!is_resource($data)) {
-            throw new Exception\InvalidTypeException('Type of Data must be resource, '.gettype($data).' given.'); 
+            throw new Exception\InvalidTypeException('Type of Data must be resource, '.gettype($data).' given.');
         }
 
         if(get_resource_type($data) !== 'gd') {
@@ -125,7 +125,7 @@ class Thumbnail
     {
 
         if(!is_string($name)) {
-            throw new Exception\InvalidTypeException('Type of Name must be string, '.gettype($name).' given.'); 
+            throw new Exception\InvalidTypeException('Type of Name must be string, '.gettype($name).' given.');
         }
 
         $this->name = $name;
@@ -159,6 +159,8 @@ class Thumbnail
 
         if ($request['info']['http_code'] == 404) {
             throw new Exception\InvalidIdException('Clip "'.$this->id.'" doesn\'t exist.');
+        } elseif ($request['info']['http_code'] == 403) {
+            throw new Exception\InvalidIdException('Clip "'.$this->id.'" is private.');
         }
 
         $data   = json_decode($request['data'], true);
